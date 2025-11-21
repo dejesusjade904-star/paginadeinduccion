@@ -1,0 +1,464 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temas</title>
+
+  <!-- Tipografía Altice -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff2") format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root{
+      --yellow:#ffd000;
+      --orange:#041875;
+      --dark:#ffd000;
+      --gray:#6b7280;
+      --light-gray:#f4f5f7;
+      --border-gray:#e5e7eb;
+      --white:#ffffff;
+
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --soft-panel:rgba(4,24,117,0.03);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:#ffffff;
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;
+      background:#ffffff;
+      border-radius:0;
+      overflow:hidden;
+      box-shadow:none;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-strip{
+      height:6px;
+      background:#111827;
+    }
+
+    .top-nav{
+      height:58px;
+      padding:0 32px;
+      border-bottom:1px solid #e5e7eb;
+      position:relative; /* para los botones */
+    }
+
+    /* BOTÓN MENÚ (CASITA) */
+    .corner-menu-btn{
+      position:absolute;
+      left:32px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      z-index:10;
+    }
+
+    .corner-menu-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-menu-btn:hover{
+      background:#1664fa;
+    }
+
+    /* BOTÓN IR HACIA ATRÁS */
+    .corner-back-btn{
+      position:absolute;
+      left:80px; /* al lado de la casita */
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.38);
+      z-index:10;
+    }
+
+    .corner-back-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-back-btn:hover{
+      background:#1664fa;
+    }
+
+    .content{
+      flex:1;
+      display:block;
+      min-height:auto;
+    }
+
+    .left-panel{
+      padding:32px 40px 32px 40px;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+
+    /* CONTENEDOR DE LAS TARJETAS */
+    .cards-wrapper{
+      width:100%;
+      background:var(--soft-panel);
+      border-radius:22px;
+      padding:26px 30px 30px;
+      position:relative;
+    }
+
+    .cards-title{
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--orange);
+      margin-bottom:20px;
+      text-align:center;
+    }
+
+    /* 4 CARTAS EN UNA FILA */
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:18px;
+    }
+
+    .info-card{
+      background:#ffffff;
+      border-radius:14px;
+      padding:20px 20px 34px;
+      box-shadow:0 14px 30px rgba(15,23,42,0.10);
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      overflow:hidden;
+    }
+
+    .info-card::before{
+      content:"";
+      position:absolute;
+      top:0;
+      right:0;
+      width:52px;
+      height:52px;
+      border-bottom-left-radius:40px;
+      background:var(--light-gray);
+      opacity:.9;
+    }
+
+    .card-header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+      width:100%;
+    }
+
+    .card-icon-circle{
+      width:48px;
+      height:48px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.3rem;
+      font-weight:700;
+      flex-shrink:0;
+      color:#ffffff;
+    }
+
+    .card-1 .card-icon-circle{background:var(--blue);}
+    .card-2 .card-icon-circle{background:var(--cyan); color:#041875;}
+    .card-3 .card-icon-circle{background:var(--yellow); color:#041875;}
+    .card-4 .card-icon-circle{background:var(--orange);}
+
+    .card-title{
+      font-size:.95rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      color:#111827;
+    }
+
+    .card-text{
+      font-size:.82rem;
+      line-height:1.7;
+      color:#4b5563;
+      margin-top:4px;
+    }
+
+    .card-footer-link{
+      margin-top:auto;
+      width:100%;
+      display:flex;
+      justify-content:center;
+      text-decoration:none;
+    }
+
+    .footer-circle{
+      margin-top:18px;
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 8px 18px rgba(15,23,42,0.28);
+      border:2px solid rgba(255,255,255,0.7);
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .footer-circle svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .card-1 .footer-circle{background:var(--blue);}
+    .card-1 .footer-circle svg{fill:#ffffff;}
+
+    .card-2 .footer-circle{background:var(--cyan);}
+    .card-2 .footer-circle svg{fill:#041875;}
+
+    .card-3 .footer-circle{background:var(--yellow);}
+    .card-3 .footer-circle svg{fill:#041875;}
+
+    .card-4 .footer-circle{background:var(--orange);}
+    .card-4 .footer-circle svg{fill:#ffffff;}
+
+    .card-footer-link:hover .footer-circle{
+      transform:translateY(-2px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.35);
+      filter:brightness(1.06);
+    }
+
+    .cards-actions{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-next{
+      min-width:150px;
+      padding:8px 24px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(22,100,250,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn-next:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.55);
+      filter:brightness(1.05);
+    }
+
+    .right-panel{
+      display:none;
+    }
+
+    @media (max-width:960px){
+      .info-grid{
+        grid-template-columns:repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:640px){
+      .top-nav{
+        padding:0 18px;
+      }
+      .left-panel{
+        padding:24px 18px 26px;
+      }
+      .cards-title{
+        font-size:1rem;
+      }
+      .info-grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-strip"></div>
+
+  <header class="top-nav">
+    <!-- BOTÓN MENÚ (CASITA) -->
+    <a href="menu guia.html" class="corner-menu-btn" title="Volver al menú">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <!-- BOTÓN IR HACIA ATRÁS -->
+    <a href="javascript:history.back()" class="corner-back-btn" title="Volver atrás">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 5l-7 7 7 7 1.5-1.5L11.5 12l5.5-5.5L15.5 5z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="left-panel">
+      <div class="cards-wrapper">
+        <h2 class="cards-title">INTRODUCCIÓN A LOS TEMAS DE EL MÓDULO 1</h2>
+
+        <div class="info-grid">
+          <!-- TARJETA 1 -->
+          <article class="info-card card-1">
+            <div class="card-header">
+              <div class="card-icon-circle">
+                <span>1</span>
+              </div>
+              <h3 class="card-title">Titutlo</h3>
+            </div>
+            <p class="card-text">
+              Breve descripción del primer punto importante que el participante
+              debe conocer antes de iniciar el tema.
+            </p>
+            <a href="tema1.html" class="card-footer-link">
+              <div class="footer-circle">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h4v2H4V6zm0 5h4v2H4v-2zm0 5h4v2H4v-2zm6.3-7.2 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7zm0 7 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7z"/>
+                </svg>
+              </div>
+            </a>
+          </article>
+
+          <!-- TARJETA 2 -->
+          <article class="info-card card-2">
+            <div class="card-header">
+              <div class="card-icon-circle">
+                <span>2</span>
+              </div>
+              <h3 class="card-title">Titutlo</h3>
+            </div>
+            <p class="card-text">
+              Indica de manera resumida qué logrará el colaborador al completar
+              esta parte de la inducción.
+            </p>
+            <a href="tema2.html" class="card-footer-link">
+              <div class="footer-circle">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h4v2H4V6zm0 5h4v2H4v-2zm0 5h4v2H4v-2zm6.3-7.2 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7zm0 7 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7z"/>
+                </svg>
+              </div>
+            </a>
+          </article>
+
+          <!-- TARJETA 3 -->
+          <article class="info-card card-3">
+            <div class="card-header">
+              <div class="card-icon-circle">
+                <span>3</span>
+              </div>
+              <h3 class="card-title">Titutlo</h3>
+            </div>
+            <p class="card-text">
+              Explica brevemente cómo se relaciona este tema con el día a día
+              del colaborador en la empresa.
+            </p>
+            <a href="tema3.html" class="card-footer-link">
+              <div class="footer-circle">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h4v2H4V6zm0 5h4v2H4v-2zm0 5h4v2H4v-2zm6.3-7.2 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7zm0 7 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7z"/>
+                </svg>
+              </div>
+            </a>
+          </article>
+
+          <!-- TARJETA 4 -->
+          <article class="info-card card-4">
+            <div class="card-header">
+              <div class="card-icon-circle">
+                <span>4</span>
+              </div>
+              <h3 class="card-title">Titutlo</h3>
+            </div>
+            <p class="card-text">
+              Señala cuál es el recurso o actividad que sigue a continuación
+              para dar continuidad al aprendizaje.
+            </p>
+            <a href="tema4.html" class="card-footer-link">
+              <div class="footer-circle">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h4v2H4V6zm0 5h4v2H4v-2zm0 5h4v2H4v-2zm6.3-7.2 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7zm0 7 1.4-1.4 2.3 2.3 4-4 1.4 1.4-5.4 5.4-3.7-3.7z"/>
+                </svg>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <div class="cards-actions">
+          <a href="actividad.html" class="btn-next">Continuar</a>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="right-panel"></aside>
+  </main>
+</div>
+
+</body>
+</html>

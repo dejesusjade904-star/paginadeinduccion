@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu</title>
+
+  <!-- Tipografía Altice -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff")  format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root{
+      --navy:#0e1d3a;
+      --navy-deep:#041875;
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --bg-soft:#f1f5fd;
+      --orange:#ec6734;
+      --yellow:#ffd000;
+      --white:#ffffff;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    /* ===== ESCALA GLOBAL PARA QUE NO SE VEA PEQUEÑO EN MOODLE ===== */
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:#000; /* respaldo mientras carga la imagen */
+      font-size:16px;  /* base móvil / pequeña */
+    }
+
+    @media (min-width:900px){
+      body{
+        font-size:18px; /* ventana emergente / laptop un poco más grande */
+      }
+    }
+
+    @media (min-width:1400px){
+      body{
+        font-size:20px; /* monitores muy anchos aún más grande */
+      }
+    }
+
+    /* CONTENEDOR PRINCIPAL A PANTALLA COMPLETA */
+    .hero{
+      width:100%;
+      min-height:100vh;
+      border-radius:0;
+      overflow:hidden;
+      position:relative;
+      color:var(--white);
+      box-shadow:none;
+    }
+
+    /* FONDO INTERNO + IMAGEN */
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(4,24,117,0.95) 0%,
+          rgba(4,24,117,0.86) 30%,
+          rgba(15,23,42,0.55) 50%,
+          rgba(15,23,42,0.18) 70%,
+          rgba(15,23,42,0.05) 100%
+        ),
+        linear-gradient(
+          135deg,
+          rgba(0,218,220,0.25) 0%,
+          transparent 45%,
+          rgba(22,100,250,0.28) 75%,
+          transparent 100%
+        ),
+        url("img/guia menu.jpg") center/cover no-repeat;
+      z-index:0;
+    }
+
+    /* FRANJAS DIAGONALES */
+    .diagonal{
+      position:absolute;
+      inset:-40%;
+      background:linear-gradient(115deg, rgba(241,245,253,.45), transparent 55%);
+      mix-blend-mode:screen;
+      opacity:.5;
+      pointer-events:none;
+      transform-origin:center;
+    }
+    .diagonal.d1{ transform:rotate(16deg) translateX(-10%); }
+    .diagonal.d2{ transform:rotate(16deg) translateX(20%);  opacity:.35; }
+    .diagonal.d3{ transform:rotate(16deg) translateX(50%);  opacity:.25; }
+
+    .hero-inner{
+      position:relative;
+      z-index:5;
+      min-height:100vh;
+      padding:20px 40px 24px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* NAV SUPERIOR */
+    .hero-nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:40px;
+      font-size:1rem;
+    }
+
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:24px;
+    }
+
+    .logo{
+      font-weight:700;
+      text-transform:lowercase;
+      letter-spacing:.08em;
+      font-size:1.15rem;
+    }
+
+    .logo span{
+      font-weight:400;
+      opacity:.85;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:28px;
+      text-transform:lowercase;
+      flex-wrap:wrap;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:#e5e7f5;
+      position:relative;
+      font-size:0.95rem;
+    }
+
+    .nav-links a.active{
+      font-weight:700;
+      color:var(--cyan);
+    }
+
+    .nav-links a.active::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-4px;
+      height:2px;
+      background:var(--cyan);
+      border-radius:999px;
+    }
+
+    /* BOTÓN MENÚ (solo móvil) */
+    .menu-toggle{
+      display:none;          /* se activa en pantallas pequeñas */
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      border:2px solid #ffffff;
+      background:var(--cyan);   /* color que resalta */
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      margin-left:8px;
+      cursor:pointer;
+    }
+
+    .menu-toggle span{
+      display:block;
+      width:22px;
+      height:2px;
+      border-radius:999px;
+      background:var(--navy-deep);  /* líneas oscuras para contraste */
+      margin:3px 0;
+      transition:transform .18s ease, opacity .18s ease;
+    }
+
+    /* animación a "X" cuando está abierto */
+    .menu-toggle.open span:nth-child(1){
+      transform:translateY(5px) rotate(45deg);
+    }
+    .menu-toggle.open span:nth-child(2){
+      opacity:0;
+    }
+    .menu-toggle.open span:nth-child(3){
+      transform:translateY(-5px) rotate(-45deg);
+    }
+
+    /* BUSCADOR */
+    .nav-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .search-box{
+      position:relative;
+      width:260px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.9);
+      background:rgba(0,0,0,0.25);
+      display:flex;
+      align-items:center;
+      padding:0 40px 0 14px;
+      font-size:.9rem;
+      color:#f9fafb;
+      box-sizing:border-box;
+    }
+
+    .search-box span{
+      opacity:.9;
+    }
+
+    .search-box::after{
+      content:"";
+      position:absolute;
+      right:12px;
+      width:13px;
+      height:13px;
+      border-radius:50%;
+      border:2px solid #ffffff;
+      box-sizing:border-box;
+    }
+
+    .search-box::before{
+      content:"";
+      position:absolute;
+      right:8px;
+      top:50%;
+      width:7px;
+      height:2px;
+      background:#ffffff;
+      transform:translateY(5px) rotate(45deg);
+      border-radius:999px;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    .hero-main{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+    }
+
+    .hero-text{
+      max-width:430px;
+    }
+
+    .hero-title{
+      font-size:3.4rem;
+      line-height:1;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .hero-sub{
+      font-size:1.1rem;
+      text-transform:lowercase;
+      letter-spacing:.08em;
+      opacity:.92;
+      margin-bottom:22px;
+    }
+
+    .hero-paragraph{
+      font-size:.9rem;
+      line-height:1.8;
+      opacity:.85;
+      margin-bottom:26px;
+      max-width:320px;
+    }
+
+    /* CONTENEDOR DE BOTONES */
+    .hero-actions{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .hero-btn,
+    .hero-btn-secondary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:9px 26px;
+      border-radius:999px;
+      font-size:.85rem;
+      cursor:pointer;
+      text-decoration:none;
+      text-transform:lowercase;
+      letter-spacing:.08em;
+    }
+
+    .hero-btn{
+      border:none;
+      background:var(--cyan);
+      color:var(--navy-deep);
+      box-shadow:0 10px 24px rgba(0,218,220,.6);
+    }
+
+    .hero-btn:hover{
+      background:var(--yellow);
+      box-shadow:0 10px 24px rgba(255,208,0,.6);
+    }
+
+    .hero-btn-secondary{
+      border:1px solid rgba(255,255,255,.75);
+      background:transparent;
+      color:#ffffff;
+    }
+
+    .hero-btn-secondary:hover{
+      background:rgba(15,23,42,.7);
+    }
+
+    /* ====== RESPONSIVE GENERAL ====== */
+    @media (max-width:900px){
+      .hero-inner{
+        padding:18px 18px 20px;
+      }
+
+      .hero-nav{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+      }
+
+      .nav-left{
+        width:100%;
+        justify-content:space-between;
+      }
+
+      .nav-right{
+        width:100%;
+      }
+
+      .search-box{
+        width:100%;
+      }
+
+      .menu-toggle{
+        display:flex;
+      }
+
+      .nav-links{
+        position:absolute;
+        top:64px;
+        left:18px;
+        right:18px;
+        background:rgba(6,20,60,0.96);
+        padding:12px 16px;
+        border-radius:14px;
+        flex-direction:column;
+        gap:12px;
+        display:none;
+        z-index:10;
+      }
+
+      .nav-links.open{
+        display:flex;
+      }
+
+      .hero-title{
+        font-size:2.6rem;
+      }
+    }
+
+    @media (max-width:600px){
+      .hero-main{
+        margin-top:10px;
+      }
+      .hero-title{
+        font-size:2.3rem;
+      }
+      .hero-paragraph{
+        max-width:100%;
+      }
+    }
+
+    /* ====== DESKTOP GRANDE (Moodle ventana completa) ====== */
+    @media (min-width:1200px){
+      .hero-inner{
+        padding:30px 60px 32px;
+      }
+
+      .logo{
+        font-size:1.35rem;
+      }
+
+      .nav-links a{
+        font-size:1.1rem;
+      }
+
+      .search-box{
+        width:320px;
+        height:40px;
+        font-size:1rem;
+      }
+
+      .hero-text{
+        max-width:520px;
+      }
+
+      .hero-title{
+        font-size:3.9rem;
+      }
+
+      .hero-sub{
+        font-size:1.25rem;
+      }
+
+      .hero-paragraph{
+        font-size:1.05rem;
+        max-width:420px;
+      }
+
+      .hero-btn,
+      .hero-btn-secondary{
+        font-size:.95rem;
+        padding:11px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <!-- Fondo interno con imagen + degradados -->
+  <div class="hero-bg"></div>
+
+  <!-- Franjas diagonales -->
+  <div class="diagonal d1"></div>
+  <div class="diagonal d2"></div>
+  <div class="diagonal d3"></div>
+
+  <div class="hero-inner">
+    <!-- NAV -->
+    <header class="hero-nav">
+      <div class="nav-left">
+        <div class="logo">altice <span>academy</span></div>
+
+        <!-- Botón menú móvil -->
+        <button class="menu-toggle" type="button" aria-label="Abrir menú">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="nav-links">
+          <a href="#" class="active">contenido</a>
+          <a href="desarrollo.html">modulo 1</a>
+          <a href="#">modulo 2</a>
+          <a href="#">modulo 3</a>
+          <a href="#">modulo 4</a>
+        </nav>
+      </div>
+
+      <div class="nav-right">
+        <div class="search-box">
+          <span>Buscar</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <section class="hero-main">
+      <div class="hero-text">
+        <h1 class="hero-title">Titulo</h1>
+        <div class="hero-sub">modulos</div>
+
+        <p class="hero-paragraph">
+          Esta guía está diseñada para trainers y facilitadores que imparten la
+          inducción a personas que se integran a trabajar. Aquí encontrarás los
+          temas, desarrollos, actividades, role simuladores y la evaluación final
+          del proceso.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#" class="hero-btn-secondary">asistencia</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // Toggle del menú móvil
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navLinks   = document.querySelector('.nav-links');
+
+  menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    menuToggle.classList.toggle('open');
+  });
+</script>
+
+</body>
+</html>

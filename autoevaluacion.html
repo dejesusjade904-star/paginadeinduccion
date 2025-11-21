@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autoevaluaciones</title>
+
+  <!-- Tipografía Altice -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff")  format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+  
+    :root{
+      --bg-page:#ffffff;
+      --panel-soft:#ffffff;
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --dark-blue:#041875;
+
+      --ev1:#f97316;  /* naranja */
+      --ev2:#06b6d4;  /* turquesa */
+      --ev3:#facc15;  /* amarillo */
+      --ev4:#3b82f6;  /* azul */
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:var(--bg-page);
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;
+      background:#ffffff;
+      border-radius:0;
+      overflow:hidden;
+      box-shadow:none;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-strip{
+      height:6px;
+      background:#111827;
+    }
+
+    .top-nav{
+      height:58px;
+      border-bottom:1px solid #e5e7eb;
+      position:relative;
+    }
+
+    /* BOTÓN MENÚ (CASITA) */
+    .corner-menu-btn{
+      position:absolute;
+      left:32px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      z-index:10;
+    }
+
+    .corner-menu-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-menu-btn:hover{
+      background:#1664fa;
+    }
+
+    /* BOTÓN IR HACIA ATRÁS */
+    .corner-back-btn{
+      position:absolute;
+      left:80px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.38);
+      z-index:10;
+    }
+
+    .corner-back-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-back-btn:hover{
+      background:#1664fa;
+    }
+
+    .content{
+      padding:32px 40px 36px;
+      flex:1;
+      display:flex;
+    }
+
+    .left-panel{
+      position:relative;
+      width:100%;
+    }
+
+    .cards-wrapper{
+      width:100%;
+      background:var(--panel-soft);
+      border-radius:22px;
+      padding:22px 30px 26px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.12);
+    }
+
+    .section-label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:4px 18px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.72rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      box-shadow:0 8px 20px rgba(22,100,250,0.4);
+      margin-bottom:10px;
+    }
+
+    .section-label::before,
+    .section-label::after{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .cards-title{
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--dark-blue);
+      margin-bottom:8px;
+      text-align:center;
+    }
+
+    /* ===== TARJETAS ===== */
+    .eval-row{
+      display:flex;
+      gap:18px;
+      justify-content:space-between;
+      align-items:stretch;
+    }
+
+    .eval-card{
+      flex:1;
+      min-width:0;
+      max-width:260px;
+      background:#ffffff;
+      border-radius:18px;
+      border:2px solid #e5e7eb;
+      position:relative;
+      padding:80px 16px 26px;  /* espacio para la franja */
+      box-shadow:0 16px 34px rgba(15,23,42,0.2);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;   /* ← centra verticalmente el contenido */
+      text-align:center;
+      overflow:hidden;
+      min-height:250px;
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+
+    .eval-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 20px 40px rgba(15,23,42,0.26);
+    }
+
+    .ev1{ border-color:var(--ev1); }
+    .ev2{ border-color:var(--ev2); }
+    .ev3{ border-color:var(--ev3); }
+    .ev4{ border-color:var(--ev4); }
+
+    /* FRANJA SUPERIOR */
+    .eval-ribbon{
+      position:absolute;
+      top:-2px;
+      left:-2px;
+      right:-2px;
+      height:56px;
+      padding:0 18px;
+      border-radius:18px 18px 0 0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#ffffff;
+      font-weight:700;
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .ev1 .eval-ribbon{ background:var(--ev1); }
+    .ev2 .eval-ribbon{ background:var(--ev2); }
+    .ev3 .eval-ribbon{ background:var(--ev3); }
+    .ev4 .eval-ribbon{ background:var(--ev4); }
+
+    .eval-letter{
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,0.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.9rem;
+      flex-shrink:0;
+      background:rgba(0,0,0,0.10);
+    }
+
+    .eval-ribbon-text{
+      font-size:.9rem;
+      white-space:nowrap;
+    }
+
+    /* CONTENEDOR DEL BOTÓN (CENTRADO) */
+    .eval-footer{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .eval-btn{
+      padding:6px 18px;
+      border-radius:999px;
+      border:none;
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-decoration:none;
+      color:#ffffff;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 8px 16px rgba(15,23,42,0.35);
+      cursor:pointer;
+    }
+
+    .ev1 .eval-btn{ background:var(--ev1); }
+    .ev2 .eval-btn{ background:var(--ev2); color:#374151; }
+    .ev3 .eval-btn{ background:var(--ev3); color:#374151; }
+    .ev4 .eval-btn{ background:var(--ev4); }
+
+    .cards-actions{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-next{
+      min-width:150px;
+      padding:8px 24px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(22,100,250,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn-next:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.55);
+      filter:brightness(1.05);
+    }
+
+    /* ========= MODALES ========= */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,0.75);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease;
+      z-index:50;
+    }
+
+    .modal-backdrop.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .modal-box{
+      background:#ffffff;
+      border-radius:20px;
+      max-width:960px;
+      width:96%;
+      padding:20px 22px 22px;
+      box-shadow:0 24px 60px rgba(0,0,0,.6);
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      max-height:95vh;
+    }
+
+    .modal-close{
+      position:absolute;
+      top:10px;
+      right:10px;
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      border:none;
+      background:#f3f4f6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:1.05rem;
+      color:#111827;
+      box-shadow:0 4px 8px rgba(0,0,0,.2);
+      z-index:1;
+    }
+
+    .modal-close:hover{
+      background:#e5e7eb;
+    }
+
+    .modal-frame-wrapper{
+      flex:1;
+      border-radius:16px;
+      overflow:hidden;
+      background:#111827;
+      box-shadow:0 10px 26px rgba(15,23,42,0.45);
+    }
+
+    .modal-frame{
+      width:100%;
+      height:100%;
+      min-height:420px;
+      border:0;
+      display:block;
+      background:#ffffff;
+    }
+
+    .modal-actions{
+      margin-top:10px;
+      display:flex;
+      justify-content:flex-start;
+    }
+
+    .modal-link-btn{
+      padding:8px 18px;
+      border-radius:999px;
+      border:none;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:.8rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#ffffff;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow:0 8px 18px rgba(15,23,42,0.45);
+    }
+
+    .modal-link-btn span.icon-link{
+      font-size:1rem;
+    }
+
+    .modal-link-btn:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+
+    @media (max-width:960px){
+      .content{
+        padding:24px 18px 30px;
+      }
+      .cards-wrapper{
+        padding:20px 18px 22px;
+      }
+      .eval-row{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+      .eval-card{
+        max-width:none;
+        flex:1 1 calc(50% - 10px);
+      }
+    }
+
+    @media (max-width:640px){
+      .eval-card{
+        flex:1 1 100%;
+      }
+      .modal-frame{
+        min-height:360px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-strip"></div>
+  <header class="top-nav">
+    <!-- Botón casa -->
+    <a href="menu guia.html" class="corner-menu-btn" title="Volver al menú">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <!-- Botón atrás -->
+    <a href="javascript:history.back()" class="corner-back-btn" title="Volver atrás">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 5l-7 7 7 7 1.5-1.5L11.5 12l5.5-5.5L15.5 5z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="left-panel">
+      <div class="cards-wrapper">
+
+        <div class="section-label"><span>ACTIVIDAD</span></div>
+        <h2 class="cards-title">AUTOEVALUACIONES DEL MÓDULO 1</h2>
+
+        <div class="eval-row">
+
+          <!-- 1 - Atención -->
+          <article class="eval-card ev1">
+            <div class="eval-ribbon">
+              <div class="eval-letter">1</div>
+              <div class="eval-ribbon-text">Atención</div>
+            </div>
+            <div class="eval-footer">
+              <button class="eval-btn" type="button" data-modal="modal-ev1">
+                Autoevaluación 1
+              </button>
+            </div>
+          </article>
+
+          <!-- 2 - Interés -->
+          <article class="eval-card ev2">
+            <div class="eval-ribbon">
+              <div class="eval-letter">2</div>
+              <div class="eval-ribbon-text">Interés</div>
+            </div>
+            <div class="eval-footer">
+              <button class="eval-btn" type="button" data-modal="modal-ev2">
+                Autoevaluación 2
+              </button>
+            </div>
+          </article>
+
+          <!-- 3 - Deseo -->
+          <article class="eval-card ev3">
+            <div class="eval-ribbon">
+              <div class="eval-letter">3</div>
+              <div class="eval-ribbon-text">Deseo</div>
+            </div>
+            <div class="eval-footer">
+              <button class="eval-btn" type="button" data-modal="modal-ev3">
+                Autoevaluación 3
+              </button>
+            </div>
+          </article>
+
+          <!-- 4 - Acción -->
+          <article class="eval-card ev4">
+            <div class="eval-ribbon">
+              <div class="eval-letter">4</div>
+              <div class="eval-ribbon-text">Acción</div>
+            </div>
+            <div class="eval-footer">
+              <button class="eval-btn" type="button" data-modal="modal-ev4">
+                Autoevaluación 4
+              </button>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="cards-actions">
+          <a href="menu-final.html" class="btn-next">Continuar a Módulo 2</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ========= MODALES CON LA PANTALLA EMBEBIDA ========= -->
+
+<!-- EV1 -->
+<div class="modal-backdrop" id="modal-ev1">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-frame-wrapper">
+      <iframe
+        class="modal-frame"
+        src="https://view.genially.com/641bad7b6429540010fac97e"
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <div class="modal-actions">
+      <a href="https://view.genially.com/641bad7b6429540010fac97e"
+         target="_blank"
+         class="modal-link-btn">
+        <span class="icon-link">🔗</span>
+        Abrir en pestaña nueva
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- EV2 -->
+<div class="modal-backdrop" id="modal-ev2">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-frame-wrapper">
+      <iframe
+        class="modal-frame"
+        src="https://campus.altice.com.do/mod/page/view.php?id=10063"
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <div class="modal-actions">
+      <a href="https://campus.altice.com.do/mod/page/view.php?id=10063"
+         target="_blank"
+         class="modal-link-btn">
+        <span class="icon-link">🔗</span>
+        Abrir en pestaña nueva
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- EV3 -->
+<div class="modal-backdrop" id="modal-ev3">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-frame-wrapper">
+      <iframe
+        class="modal-frame"
+        src="https://view.genially.com/641bad7b6429540010fac97e"
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <div class="modal-actions">
+      <a href="https://view.genially.com/641bad7b6429540010fac97e"
+         target="_blank"
+         class="modal-link-btn">
+        <span class="icon-link">🔗</span>
+        Abrir en pestaña nueva
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- EV4 -->
+<div class="modal-backdrop" id="modal-ev4">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-frame-wrapper">
+      <iframe
+        class="modal-frame"
+        src="https://view.genially.com/641bad7b6429540010fac97e"
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <div class="modal-actions">
+      <a href="https://view.genially.com/641bad7b6429540010fac97e"
+         target="_blank"
+         class="modal-link-btn">
+        <span class="icon-link">🔗</span>
+        Abrir en pestaña nueva
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Abrir modal desde cada botón
+  document.querySelectorAll('.eval-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = this.getAttribute('data-modal');
+      var modal = document.getElementById(id);
+      if(modal){
+        modal.classList.add('active');
+      }
+    });
+  });
+
+  // Cerrar con la X
+  document.querySelectorAll('.modal-close').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      this.closest('.modal-backdrop').classList.remove('active');
+    });
+  });
+
+  // Cerrar haciendo clic fuera de la caja
+  document.querySelectorAll('.modal-backdrop').forEach(function(backdrop){
+    backdrop.addEventListener('click', function(e){
+      if(e.target === backdrop){
+        backdrop.classList.remove('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

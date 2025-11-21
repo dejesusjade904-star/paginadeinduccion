@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simuladores</title>
+
+  <!-- Tipografía Altice -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff")  format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+  
+    :root{
+      --bg-page:#ffffff;
+      --panel-soft:#ffffff;
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --dark-blue:#041875;
+
+      --sim1:#f97316;  /* naranja */
+      --sim2:#06b6d4;  /* turquesa */
+      --sim3:#3b82f6;  /* azul */
+      --sim4:#facc15;  /* amarillo */
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:var(--bg-page);
+      display:flex;              /* ocupa pantalla completa */
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;          /* pantalla completa */
+      background:#ffffff;
+      border-radius:0;
+      overflow:hidden;
+      box-shadow:none;           /* sin sombra general */
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-strip{
+      height:6px;
+      background:#111827;
+    }
+
+    .top-nav{
+      height:58px;
+      border-bottom:1px solid #e5e7eb;
+      position:relative;         /* para los botones */
+    }
+
+    /* BOTÓN MENÚ (CASITA) */
+    .corner-menu-btn{
+      position:absolute;
+      left:32px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      z-index:10;
+    }
+
+    .corner-menu-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-menu-btn:hover{
+      background:#1664fa;
+    }
+
+    /* BOTÓN IR HACIA ATRÁS */
+    .corner-back-btn{
+      position:absolute;
+      left:80px; /* al lado de la casita */
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.38);
+      z-index:10;
+    }
+
+    .corner-back-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-back-btn:hover{
+      background:#1664fa;
+    }
+
+    .content{
+      padding:32px 40px 36px;
+      flex:1;
+      display:flex;
+    }
+
+    .left-panel{
+      position:relative;
+      width:100%;
+    }
+
+    /* === CONTENEDOR PRINCIPAL (CARTA INTERNA) === */
+    .cards-wrapper{
+      width:100%;
+      background:var(--panel-soft);
+      border-radius:22px;
+      padding:22px 30px 26px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.12);
+    }
+
+    .section-label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:4px 18px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.72rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      box-shadow:0 8px 20px rgba(22,100,250,0.4);
+      margin-bottom:10px;
+    }
+
+    .section-label::before,
+    .section-label::after{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .cards-title{
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--dark-blue);
+      margin-bottom:10px;
+      text-align:center;
+    }
+
+    .cards-subtitle{
+      font-size:.8rem;
+      color:#4b5563;
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    /* ========= TARJETAS ========= */
+    .sim-grid{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:nowrap;
+    }
+
+    .sim-card{
+      position:relative;
+      flex:1;
+      max-width:260px;
+      min-width:0;
+      min-height:220px;
+      background:#ffffff;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 16px 34px rgba(15,23,42,0.20);
+      display:flex;
+      flex-direction:column;
+      padding:18px 18px 14px;
+    }
+
+    .sim-tab{
+      position:absolute;
+      top:0;
+      right:0;
+      height:32px;
+      min-width:46px;
+      padding:0 10px;
+      background:var(--blue);
+      border-bottom-left-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      font-size:.75rem;
+      font-weight:700;
+    }
+
+    .sim-1 .sim-tab{ background:var(--sim1); }
+    .sim-2 .sim-tab{ background:var(--sim2); }
+    .sim-3 .sim-tab{ background:var(--sim3); }
+    .sim-4 .sim-tab{ background:var(--sim4); }
+
+    .sim-title{
+      margin-top:6px;
+      font-size:.92rem;
+      font-weight:700;
+      color:#111827;
+    }
+
+    .sim-step{
+      font-size:.72rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:#6b7280;
+      margin-bottom:2px;
+    }
+
+    .sim-text{
+      font-size:.78rem;
+      line-height:1.6;
+      color:#4b5563;
+      margin-top:6px;
+      margin-bottom:0;
+    }
+
+    .sim-bottom{
+      margin-top:auto;
+      position:relative;
+      height:70px;
+      border-radius:16px;
+      overflow:hidden;
+      background:#e5e7eb;
+    }
+
+    .sim-diagonal{
+      position:absolute;
+      inset:0;
+      clip-path:polygon(0 40%, 100% 5%, 100% 100%, 0 100%);
+      background:var(--blue);
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      padding:10px 14px;
+    }
+
+    .sim-1 .sim-diagonal{ background:var(--sim1); }
+    .sim-2 .sim-diagonal{ background:var(--sim2); }
+    .sim-3 .sim-diagonal{ background:var(--sim3); }
+    .sim-4 .sim-diagonal{ background:var(--sim4); }
+
+    .sim-icon-link{
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      font-size:1.2rem;
+      text-decoration:none;
+      box-shadow:0 6px 14px rgba(15,23,42,0.35);
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .sim-icon-link:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 20px rgba(15,23,42,0.45);
+      background:rgba(255,255,255,0.32);
+    }
+
+    .sim-card-inner{
+      position:relative;
+      z-index:2;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .cards-actions{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-next{
+      min-width:150px;
+      padding:8px 24px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(22,100,250,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn-next:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.55);
+      filter:brightness(1.05);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:960px){
+      .content{
+        padding:24px 18px 30px;
+      }
+      .cards-wrapper{
+        padding:20px 18px 22px;
+      }
+      .sim-grid{
+        flex-wrap:wrap;
+      }
+      .sim-card{
+        max-width:none;
+        flex:1 1 calc(50% - 12px);
+        margin-bottom:16px;
+      }
+    }
+
+    @media (max-width:640px){
+      .sim-grid{
+        flex-direction:column;
+      }
+      .sim-card{
+        flex:1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-strip"></div>
+
+  <header class="top-nav">
+    <!-- BOTÓN MENÚ (CASITA) -->
+    <a href="menu guia.html" class="corner-menu-btn" title="Volver al menú">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <!-- BOTÓN IR HACIA ATRÁS -->
+    <a href="javascript:history.back()" class="corner-back-btn" title="Volver atrás">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 5l-7 7 7 7 1.5-1.5L11.5 12l5.5-5.5L15.5 5z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="left-panel">
+      <div class="cards-wrapper">
+
+        <div class="section-label"><span>ACTIVIDADES</span></div>
+        <h2 class="cards-title">SIMULADORES DEL MÓDULO 1</h2>
+        <p class="cards-subtitle">
+          Clic en el link.
+        </p>
+
+        <div class="sim-grid">
+
+          <!-- TARJETA 1 -->
+          <article class="sim-card sim-1">
+            <div class="sim-card-inner">
+              <div class="sim-tab">S1</div>
+
+              <div class="sim-step">ESCENARIO 1</div>
+              <h3 class="sim-title">Primer contacto</h3>
+              <p class="sim-text">
+                Practica cómo presentarte, generar confianza inicial y abrir
+                la conversación en la visita door to door.
+              </p>
+
+              <div class="sim-bottom">
+                <div class="sim-diagonal">
+                  <a href="simulador1.html" class="sim-icon-link" title="Abrir simulador 1">
+                    🔗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- TARJETA 2 -->
+          <article class="sim-card sim-2">
+            <div class="sim-card-inner">
+              <div class="sim-tab">S2</div>
+
+              <div class="sim-step">ESCENARIO 2</div>
+              <h3 class="sim-title">Detección de necesidades</h3>
+              <p class="sim-text">
+                Ensaya preguntas clave para identificar lo que el cliente
+                realmente necesita y validar su interés.
+              </p>
+
+              <div class="sim-bottom">
+                <div class="sim-diagonal">
+                  <a href="simulador2.html" class="sim-icon-link" title="Abrir simulador 2">
+                    🔗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- TARJETA 3 -->
+          <article class="sim-card sim-3">
+            <div class="sim-card-inner">
+              <div class="sim-tab">S3</div>
+
+              <div class="sim-step">ESCENARIO 3</div>
+              <h3 class="sim-title">Manejo de objeciones</h3>
+              <p class="sim-text">
+                Practica cómo responder las objeciones más frecuentes sin perder
+                empatía ni el foco en la solución.
+              </p>
+
+              <div class="sim-bottom">
+                <div class="sim-diagonal">
+                  <a href="simulador3.html" class="sim-icon-link" title="Abrir simulador 3">
+                    🔗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- TARJETA 4 -->
+          <article class="sim-card sim-4">
+            <div class="sim-card-inner">
+              <div class="sim-tab">S4</div>
+
+              <div class="sim-step">ESCENARIO 4</div>
+              <h3 class="sim-title">Cierre y acuerdos</h3>
+              <p class="sim-text">
+                Simula el cierre de la venta: confirmar acuerdos, próximos pasos
+                y despedida profesional con el cliente.
+              </p>
+
+              <div class="sim-bottom">
+                <div class="sim-diagonal">
+                  <a href="simulador4.html" class="sim-icon-link" title="Abrir simulador 4">
+                    🔗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- BOTÓN GENERAL -->
+        <div class="cards-actions">
+          <a href="resumen.html" class="btn-next">Continuar</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+</body>
+</html>

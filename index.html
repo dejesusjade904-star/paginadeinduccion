@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía de Inducción</title>
+
+  <!-- TIPOGRAFÍA ALTICE -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff") format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+  
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    /* ===== ESCALA GLOBAL DE TEXTO ===== */
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:#000;          /* de respaldo mientras carga la imagen */
+      font-size:16px;           /* base móvil / pantallas pequeñas */
+    }
+
+    /* En laptops/escritorio (como la ventana emergente de Moodle) subimos el tamaño base */
+    @media (min-width:900px){
+      body{
+        font-size:18px;         /* todo el contenido crece ~12% */
+      }
+    }
+
+    @media (min-width:1400px){
+      body{
+        font-size:20px;         /* aún más grande en pantallas muy anchas */
+      }
+    }
+
+    .hero-shell{
+      width:100%;
+      min-height:100vh;         /* ocupa todo el alto de la pantalla */
+      position:relative;
+      color:#ffffff;
+      border-radius:0;
+      box-shadow:none;
+      overflow:hidden;
+    }
+
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(0deg, rgba(0,0,0,.70), rgba(0,0,0,.70)),
+        url("img/profesor.jpg") center/cover no-repeat;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:1;
+      padding:40px 32px 26px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* HERO TEXTO */
+    .hero-main{
+      flex:1;
+      display:flex;
+      align-items:center;        /* centrado vertical */
+      justify-content:flex-start;/* alineado a la izquierda */
+      padding:10px 8px 10px 8px;
+    }
+
+    .hero-left{
+      max-width:520px;
+    }
+
+    /* un poco más de aire a la izquierda en escritorio */
+    @media (min-width:900px){
+      .hero-main{
+        padding-left:60px;
+      }
+    }
+
+    .hero-title{
+      /* grande para Moodle */
+      font-size:clamp(3.2rem, 4.8vw, 4.4rem);
+      line-height:1.1;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .hero-sub{
+      /* párrafo grande y cómodo de leer */
+      font-size:clamp(1.1rem, 1.4vw, 1.4rem);
+      line-height:1.9;
+      color:#e5e7eb;
+      margin-bottom:30px;
+    }
+
+    .hero-cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    .btn-primary{
+      text-decoration:none;
+      padding:12px 30px;        /* botón grande */
+      border-radius:999px;
+      border:none;
+      background:#f3f4f6;
+      color:#111827;
+      font-size:1rem;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:.15s ease;
+      box-shadow:0 10px 22px rgba(0,0,0,.35);
+    }
+
+    .btn-primary:hover{
+      background:#e5e7eb;
+    }
+
+    /* RESPONSIVE móvil real */
+    @media (max-width:720px){
+      .hero-content{
+        padding:24px 16px 20px;
+      }
+      .hero-main{
+        padding-top:22px;
+        padding-left:8px;
+      }
+      .hero-left{
+        max-width:100%;
+      }
+      .hero-title{
+        font-size:2.3rem;
+      }
+      .hero-sub{
+        font-size:1rem;
+      }
+      .btn-primary{
+        width:100%;
+        justify-content:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero-shell">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+    <!-- PORTADA -->
+    <main class="hero-main">
+      <section class="hero-left">
+        <h1 class="hero-title">
+          Guía de Inducción door to door
+        </h1>
+
+        <p class="hero-sub">
+          Esta guía está diseñada para trainers y facilitadores que imparten la
+          inducción a personas que se integran a trabajar. Aquí encontrarás los
+          temas, desarrollos, actividades, role simuladores y la evaluación final
+          del proceso.
+        </p>
+
+        <div class="hero-cta">
+          <!-- ÚNICO BOTÓN DE LA PORTADA -->
+          <a href="menu guia.html" class="btn-primary">
+            Entrar a la guía
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

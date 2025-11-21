@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarjetas tipo Infografía</title>
+
+  <!-- Tipografía Altice -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff")  format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+  
+    :root{
+      --bg-page:#ffffff;
+      --panel-soft:#ffffff;
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --dark-blue:#041875;
+
+      --a-color:#ff4b6a;  /* rosa/rojo */
+      --b-color:#2f7dd5;  /* azul */
+      --c-color:#ffc72c;  /* amarillo */
+      --d-color:#00b7c6;  /* turquesa */
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:var(--bg-page);
+      display:flex;          /* ocupa toda la pantalla */
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;      /* se estira a toda la altura */
+      background:#ffffff;
+      border-radius:0;
+      overflow:hidden;
+      box-shadow:none;       /* sin sombra general */
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-strip{
+      height:6px;
+      background:#111827;
+    }
+
+    .top-nav{
+      height:58px;
+      border-bottom:1px solid #e5e7eb;
+      position:relative; /* necesario para posicionar los botones */
+    }
+
+    /* BOTÓN MENÚ (CASITA) */
+    .corner-menu-btn{
+      position:absolute;
+      left:32px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      z-index:10;
+    }
+
+    .corner-menu-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-menu-btn:hover{
+      background:#1664fa;
+    }
+
+    /* BOTÓN IR HACIA ATRÁS */
+    .corner-back-btn{
+      position:absolute;
+      left:80px; /* al lado de la casita */
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.38);
+      z-index:10;
+    }
+
+    .corner-back-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-back-btn:hover{
+      background:#1664fa;
+    }
+
+    .content{
+      padding:32px 40px 36px;
+      flex:1;
+      display:flex;
+    }
+
+    .left-panel{
+      position:relative;
+      width:100%;
+    }
+
+    /* CARTA GRANDE */
+    .cards-wrapper{
+      width:100%;
+      background:var(--panel-soft);
+      border-radius:22px;
+      padding:22px 30px 26px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.12); /* se mantiene la sombra de la carta */
+    }
+
+    .section-label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:4px 18px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.72rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      box-shadow:0 8px 20px rgba(22,100,250,0.4);
+      margin-bottom:10px;
+    }
+
+    .section-label::before,
+    .section-label::after{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .cards-title{
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--dark-blue);
+      margin-bottom:20px;
+      text-align:center;
+    }
+
+    /* === TARJETAS: 4 EN UNA FILA, MISMO TAMAÑO === */
+    .card-grid{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:nowrap;
+    }
+
+    .feature-card{
+      position:relative;
+      background:#ffffff;
+      border-radius:16px;
+      box-shadow:0 14px 28px rgba(15,23,42,0.18);
+
+      flex:1;
+      max-width:260px;
+      min-width:0;
+      min-height:220px;
+
+      padding:26px 18px 22px;
+
+      display:flex;
+      flex-direction:column;
+      overflow:visible;
+    }
+
+    /* CÍRCULO SUPERIOR */
+    .badge-circle{
+      position:absolute;
+      top:-20px;
+      left:22px;
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 22px rgba(15,23,42,0.25);
+    }
+
+    /* link dentro del círculo */
+    .badge-link{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#ffffff;
+      font-size:1.3rem;
+      cursor:pointer;
+    }
+
+    .badge-link:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+
+    /* ICONO CENTRAL DE LA TARJETA */
+    .card-icon{
+      font-size:1.4rem;
+      margin-bottom:8px;
+    }
+
+    .card-title{
+      font-size:.9rem;
+      font-weight:700;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+      color:#111827;
+    }
+
+    .card-text{
+      font-size:.78rem;
+      line-height:1.6;
+      color:#4b5563;
+    }
+
+    /* BARRA INFERIOR SIEMPRE PEGADA ABAJO */
+    .card-strip{
+      margin-top:auto;
+      height:8px;
+      border-radius:999px;
+      width:80%;
+      background:#ddd;
+    }
+
+    /* COLORES POR TARJETA */
+    .card-a .badge-circle,
+    .card-a .card-strip{ background:var(--a-color); }
+
+    .card-b .badge-circle,
+    .card-b .card-strip{ background:var(--b-color); }
+
+    .card-c .badge-circle,
+    .card-c .card-strip{ background:var(--c-color); }
+
+    .card-d .badge-circle,
+    .card-d .card-strip{ background:var(--d-color); }
+
+    .card-a .card-icon{ color:var(--a-color); }
+    .card-b .card-icon{ color:var(--b-color); }
+    .card-c .card-icon{ color:var(--c-color); }
+    .card-d .card-icon{ color:var(--d-color); }
+
+    /* CONTENEDOR DEL BOTÓN (MISMO DISEÑO QUE EN TEMAS) */
+    .cards-actions{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-next{
+      min-width:150px;
+      padding:8px 24px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(22,100,250,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn-next:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.55);
+      filter:brightness(1.05);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:960px){
+      .content{
+        padding:24px 18px 30px;
+      }
+      .cards-wrapper{
+        padding:20px 18px 22px;
+      }
+      .card-grid{
+        flex-wrap:wrap;
+      }
+      .feature-card{
+        max-width:none;
+        flex:1 1 calc(50% - 12px);
+        margin-bottom:16px;
+      }
+    }
+
+    @media (max-width:640px){
+      .card-grid{
+        flex-direction:column;
+      }
+      .feature-card{
+        flex:1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-strip"></div>
+  
+  <header class="top-nav">
+    <!-- BOTÓN MENÚ (CASITA) -->
+    <a href="menu guia.html" class="corner-menu-btn" title="Volver al menú">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <!-- BOTÓN IR HACIA ATRÁS -->
+    <a href="javascript:history.back()" class="corner-back-btn" title="Volver atrás">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 5l-7 7 7 7 1.5-1.5L11.5 12l5.5-5.5L15.5 5z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="left-panel">
+      <div class="cards-wrapper">
+
+        <div class="section-label"><span>ACTIVIDADES</span></div>
+        <h2 class="cards-title">DINÁMICAS DEL MÓDULO 1</h2>
+
+        <br>
+        <br>
+
+        <div class="card-grid">
+
+          <!-- TARJETA A -->
+          <article class="feature-card card-a">
+            <div class="badge-circle">
+              <a class="badge-link" href="dinamica-a.html" title="Ir a la dinámica A">🔗</a>
+            </div>
+            <div class="card-icon">🏠</div>
+            <h3 class="card-title">Título</h3>
+            <p class="card-text">
+              Breve descripción del primer punto importante que el participante
+              debe conocer antes de iniciar el tema.
+            </p>
+            <div class="card-strip"></div>
+          </article>
+
+          <!-- TARJETA B -->
+          <article class="feature-card card-b">
+            <div class="badge-circle">
+              <a class="badge-link" href="dinamica-b.html" title="Ir a la dinámica B">🔗</a>
+            </div>
+            <div class="card-icon">🔍</div>
+            <h3 class="card-title">Título</h3>
+            <p class="card-text">
+              Indica de manera resumida qué buscar o analizar dentro de esta
+              sección del módulo de inducción.
+            </p>
+            <div class="card-strip"></div>
+          </article>
+
+          <!-- TARJETA C -->
+          <article class="feature-card card-c">
+            <div class="badge-circle">
+              <a class="badge-link" href="dinamica-c.html" title="Ir a la dinámica C">🔗</a>
+            </div>
+            <div class="card-icon">👤</div>
+            <h3 class="card-title">Título</h3>
+            <p class="card-text">
+              Explica cómo se relaciona este contenido con el rol diario del
+              colaborador dentro de la empresa.
+            </p>
+            <div class="card-strip"></div>
+          </article>
+
+          <!-- TARJETA D -->
+          <article class="feature-card card-d">
+            <div class="badge-circle">
+              <a class="badge-link" href="dinamica-d.html" title="Ir a la dinámica D">🔗</a>
+            </div>
+            <div class="card-icon">📊</div>
+            <h3 class="card-title">Título</h3>
+            <p class="card-text">
+              Señala el resultado, indicador o actividad que sigue a
+              continuación para dar cierre a este bloque del módulo.
+            </p>
+            <div class="card-strip"></div>
+          </article>
+
+        </div>
+
+        <!-- BOTÓN CONTINUAR -->
+        <div class="cards-actions">
+          <a href="role play.html" class="btn-next">Continuar</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+</body>
+</html>

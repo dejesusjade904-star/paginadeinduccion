@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actividades – Guía de Inducción</title>
+
+  <!-- TIPOGRAFÍA ALTICE -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff") format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root{
+      --yellow:#ffd000;
+      --navy:#041875;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    /* La pantalla completa ya es el hero, sin carta flotando */
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:#ffffff;
+    }
+
+    .hero-shell{
+      width:100%;
+      min-height:100vh;
+      max-width:none;
+      border-radius:0;
+      overflow:hidden;
+      position:relative;
+      color:#ffffff;
+      box-shadow:none;
+    }
+
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(135deg, rgba(4,24,117,0.92), rgba(22,100,250,0.72)),
+        url("img/actividades.jpg") center/cover no-repeat;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:1;
+      padding:24px 32px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* BOTÓN CASA (MENÚ GUÍA) */
+    .home-btn{
+      position:absolute;
+      top:24px;
+      left:24px;
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--navy);
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      transition:background .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+
+    .home-btn svg{
+      width:22px;
+      height:22px;
+      display:block;
+    }
+
+    .home-btn:hover{
+      background:var(--yellow);
+      color:#111827;
+      transform:translateY(-1px);
+      box-shadow:0 12px 24px rgba(0,0,0,.55);
+    }
+
+    .hero-main{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:70px 8px 30px;
+    }
+
+    .hero-center{
+      max-width:720px;
+      text-align:center;
+    }
+
+    .topic-label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:6px 20px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.10);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:#e5e7eb;
+      margin-bottom:20px;
+      border:1px solid rgba(255,255,255,0.26);
+    }
+
+    .topic-label::before,
+    .topic-label::after{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .hero-title{
+      font-size:clamp(3.1rem,4.6vw,3.9rem);
+      line-height:1.05;
+      font-weight:700;
+      letter-spacing:.26em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .title-underline{
+      width:110px;
+      height:3px;
+      border-radius:999px;
+      margin:0 auto;
+      background:#ffffff;
+    }
+
+    .hero-cta{
+      margin-top:26px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-white{
+      min-width:170px;
+      padding:10px 26px;
+      border-radius:999px;
+      background:#ffffff;
+      color:var(--navy);
+      font-size:.9rem;
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      text-decoration:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 22px rgba(0,0,0,.35);
+      transition:background .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+
+    .btn-white:hover{
+      background:var(--yellow);
+      color:#111827;
+      transform:translateY(-1px);
+      box-shadow:0 14px 28px rgba(0,0,0,.45);
+    }
+
+    @media (max-width:720px){
+      .hero-content{
+        padding:20px 18px;
+      }
+      .hero-title{
+        font-size:2.3rem;
+        letter-spacing:.20em;
+      }
+      .topic-label{
+        font-size:.72rem;
+        letter-spacing:.18em;
+      }
+      .title-underline{
+        width:90px;
+      }
+      .hero-main{
+        padding:60px 12px 30px;
+      }
+      .home-btn{
+        top:18px;
+        left:18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero-shell">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+    <!-- BOTÓN CASA -->
+    <a href="menu guia.html" class="home-btn" title="Volver al menú de la guía">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <main class="hero-main">
+      <section class="hero-center">
+
+        <div class="topic-label">
+          <span>INTRODUCCIÓN A LAS ACTIVIDADES</span>
+        </div>
+
+        <h1 class="hero-title">ACTIVIDADES</h1>
+        <div class="title-underline"></div>
+
+        <div class="hero-cta">
+          <a href="quizz.html" class="btn-white">Continuar</a>
+        </div>
+
+      </section>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

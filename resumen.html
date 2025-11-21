@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resúmenes</title>
+
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff")  format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+  
+    :root{
+      --bg-page:#ffffff;
+      --panel-soft:#ffffff;
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --dark-blue:#041875;
+
+      --r1:#f97316;   /* naranja */
+      --r2:#06b6d4;   /* turquesa */
+      --r3:#3b82f6;   /* azul */
+      --r4:#facc15;   /* amarillo */
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:var(--bg-page);
+      display:flex;              /* ocupa toda la pantalla */
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;          /* pantalla completa */
+      background:#ffffff;
+      border-radius:0;
+      overflow:hidden;
+      box-shadow:none;           /* sin sombra general */
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-strip{
+      height:6px;
+      background:#111827;
+    }
+
+    .top-nav{
+      height:58px;
+      border-bottom:1px solid #e5e7eb;
+      position:relative;         /* para los botones */
+    }
+
+    /* BOTÓN MENÚ (CASITA) */
+    .corner-menu-btn{
+      position:absolute;
+      left:32px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      z-index:10;
+    }
+
+    .corner-menu-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-menu-btn:hover{
+      background:#1664fa;
+    }
+
+    /* BOTÓN IR HACIA ATRÁS */
+    .corner-back-btn{
+      position:absolute;
+      left:80px; /* al lado de la casita */
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.38);
+      z-index:10;
+    }
+
+    .corner-back-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-back-btn:hover{
+      background:#1664fa;
+    }
+
+    .content{
+      padding:32px 40px 36px;
+      flex:1;
+      display:flex;
+    }
+
+    .left-panel{
+      position:relative;
+      width:100%;
+    }
+
+    .cards-wrapper{
+      width:100%;
+      background:var(--panel-soft);
+      border-radius:22px;
+      padding:22px 30px 26px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.12);
+    }
+
+    .section-label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:4px 18px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.72rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      box-shadow:0 8px 20px rgba(22,100,250,0.4);
+      margin-bottom:10px;
+    }
+
+    .section-label::before,
+    .section-label::after{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .cards-title{
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--dark-blue);
+      margin-bottom:10px;
+      text-align:center;
+    }
+
+    .cards-subtitle{
+      font-size:.8rem;
+      color:#4b5563;
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    .summary-row{
+      display:flex;
+      align-items:stretch;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .summary-card{
+      flex:1;
+      max-width:260px;
+      min-width:0;
+      background:var(--r1);
+      border-radius:22px;
+      padding:4px;
+      box-shadow:0 16px 34px rgba(15,23,42,0.22);
+      position:relative;
+    }
+
+    .summary-card-inner{
+      background:#ffffff;
+      border-radius:18px;
+      padding:18px 16px 20px;
+      height:100%;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .summary-1{ background:var(--r1); }
+    .summary-2{ background:var(--r2); }
+    .summary-3{ background:var(--r3); }
+    .summary-4{ background:var(--r4); }
+
+    .summary-tab{
+      position:absolute;
+      top:0;
+      right:0;
+      height:30px;
+      min-width:44px;
+      padding:0 10px;
+      border-bottom-left-radius:14px;
+      background:var(--r1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      font-size:.75rem;
+      font-weight:700;
+    }
+
+    .summary-1 .summary-tab{ background:var(--r1); }
+    .summary-2 .summary-tab{ background:var(--r2); }
+    .summary-3 .summary-tab{ background:var(--r3); }
+    .summary-4 .summary-tab{ background:var(--r4); }
+
+    .summary-step{
+      font-size:.72rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#6b7280;
+      margin-bottom:4px;
+    }
+
+    .summary-title{
+      font-size:.95rem;
+      font-weight:700;
+      color:#111827;
+      margin-bottom:6px;
+    }
+
+    .summary-text{
+      font-size:.78rem;
+      line-height:1.6;
+      color:#4b5563;
+      margin-bottom:0;
+    }
+
+    .summary-bottom{
+      margin-top:auto;
+      position:relative;
+      height:72px;
+      border-radius:18px;
+      overflow:hidden;
+      background:#f3f4f6;
+    }
+
+    .summary-diagonal{
+      position:absolute;
+      inset:0;
+      clip-path:polygon(0 45%, 100% 0, 100% 100%, 0 100%);
+      background:var(--r1);
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      padding:10px 14px;
+    }
+
+    .summary-1 .summary-diagonal{ background:var(--r1); }
+    .summary-2 .summary-diagonal{ background:var(--r2); }
+    .summary-3 .summary-diagonal{ background:var(--r3); }
+    .summary-4 .summary-diagonal{ background:var(--r4); }
+
+    .summary-letter{
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.78rem;
+      font-weight:700;
+      color:#ffffff;
+      background:rgba(0,0,0,0.08);
+    }
+
+    .summary-link{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1rem;
+      text-decoration:none;
+      box-shadow:0 6px 14px rgba(15,23,42,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
+    }
+
+    .summary-1 .summary-link{ color:var(--r1); }
+    .summary-2 .summary-link{ color:var(--r2); }
+    .summary-3 .summary-link{ color:var(--r3); }
+    .summary-4 .summary-link{ color:var(--r4); }
+
+    .summary-link:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 20px rgba(15,23,42,0.55);
+    }
+
+    .flow-dot{
+      width:34px;
+      flex:0 0 34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .flow-dot-inner{
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      background:#ffffff;
+      box-shadow:0 4px 10px rgba(15,23,42,0.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.9rem;
+      color:#f97316;
+    }
+
+    .cards-actions{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-next{
+      min-width:150px;
+      padding:8px 24px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(22,100,250,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn-next:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.55);
+      filter:brightness(1.05);
+    }
+
+    @media (max-width:960px){
+      .content{
+        padding:24px 18px 30px;
+      }
+      .cards-wrapper{
+        padding:20px 18px 22px;
+      }
+      .summary-row{
+        flex-wrap:wrap;
+        gap:16px;
+      }
+      .flow-dot{
+        display:none;
+      }
+      .summary-card{
+        max-width:none;
+        flex:1 1 calc(50% - 8px);
+      }
+    }
+
+    @media (max-width:640px){
+      .summary-card{
+        flex:1 1 100%;
+      }
+    }
+
+    /* ===== MODALES ===== */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,0.70);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease;
+      z-index:50;
+    }
+
+    .modal-backdrop.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .modal-box{
+      background:#ffffff;
+      border-radius:20px;
+      max-width:980px;
+      width:92%;
+      min-height:460px;
+      padding:28px 32px 32px;
+      box-shadow:0 24px 60px rgba(0,0,0,0.55);
+      position:relative;
+    }
+
+    .modal-layout{
+      display:flex;
+      gap:24px;
+      align-items:stretch;
+    }
+
+    .modal-image{
+      flex:0 0 280px;
+      border-radius:16px;
+      background:#e5e7eb;
+      min-height:420px;
+      box-shadow:0 10px 26px rgba(15,23,42,0.25);
+      overflow:hidden;
+      display:flex;
+    }
+
+    .modal-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      cursor:pointer;
+    }
+
+    .modal-content{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .modal-title{
+      font-size:1.1rem;
+      font-weight:700;
+      color:#111827;
+      margin-bottom:6px;
+    }
+
+    .modal-subtitle{
+      font-size:.9rem;
+      font-weight:600;
+      color:#2563eb;
+      margin-bottom:12px;
+    }
+
+    .modal-text{
+      font-size:.9rem;
+      line-height:1.8;
+      color:#374151;
+    }
+
+    .modal-link-icon{
+      margin-top:18px;
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#ffffff;
+      font-size:1.1rem;
+      box-shadow:0 8px 18px rgba(15,23,42,0.45);
+    }
+
+    .modal-link-icon:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+
+    .modal-close{
+      position:absolute;
+      top:14px;
+      right:14px;
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      border:1px solid #e5e7eb;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      cursor:pointer;
+      color:#ef4444;
+      box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .modal-close:hover{
+      background:#fee2e2;
+    }
+
+    @media (max-width:720px){
+      .modal-box{
+        padding:24px 18px 20px;
+      }
+      .modal-layout{
+        flex-direction:column;
+      }
+      .modal-image{
+        flex:0 0 auto;
+        width:100%;
+        min-height:220px;
+      }
+    }
+
+    /* ====== VISOR DE ZOOM ====== */
+    .zoom-viewer{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,0.85);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease;
+      z-index:60;
+    }
+
+    .zoom-viewer.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .zoom-image-box{
+      position:relative;
+      width:480px;
+      max-width:80vw;
+      max-height:80vh;
+      background:#000;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 24px 60px rgba(0,0,0,0.75);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px;
+    }
+
+    .zoom-image-box img{
+      display:block;
+      max-width:100%;
+      max-height:100%;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+    }
+
+    .zoom-close{
+      position:fixed;
+      top:18px;
+      right:24px;
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      border:none;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:1.2rem;
+      color:#111827;
+      box-shadow:0 4px 10px rgba(0,0,0,0.35);
+    }
+
+    .zoom-close:hover{
+      background:#e5e7eb;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-strip"></div>
+
+  <header class="top-nav">
+    <!-- BOTÓN MENÚ (CASITA) -->
+    <a href="menu guia.html" class="corner-menu-btn" title="Volver al menú">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <!-- BOTÓN IR HACIA ATRÁS -->
+    <a href="javascript:history.back()" class="corner-back-btn" title="Volver atrás">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 5l-7 7 7 7 1.5-1.5L11.5 12l5.5-5.5L15.5 5z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="left-panel">
+      <div class="cards-wrapper">
+
+        <div class="section-label"><span>ACTIVIDAD</span></div>
+        <h2 class="cards-title">RESÚMENES DEL MÓDULO 1</h2>
+
+        <div class="summary-row">
+
+          <!-- RESUMEN 1 -->
+          <article class="summary-card summary-1">
+            <div class="summary-card-inner">
+              <div class="summary-tab">R1</div>
+
+              <div class="summary-step">RESUMEN</div>
+              <h3 class="summary-title">Introducción general</h3>
+              <p class="summary-text">
+                Síntesis de los conceptos principales del módulo y del propósito
+                de la inducción para el colaborador.
+              </p>
+
+              <div class="summary-bottom">
+                <div class="summary-diagonal">
+                  <div class="summary-letter">1</div>
+                  <a href="resumen1.html"
+                     class="summary-link"
+                     title="Ver resumen 1"
+                     data-modal="modal-1">➜</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="flow-dot">
+            <div class="flow-dot-inner">➜</div>
+          </div>
+
+          <!-- RESUMEN 2 -->
+          <article class="summary-card summary-2">
+            <div class="summary-card-inner">
+              <div class="summary-tab">R2</div>
+
+              <div class="summary-step">RESUMEN</div>
+              <h3 class="summary-title">Productos y servicios</h3>
+              <p class="summary-text">
+                Resumen de las soluciones clave que se ofrecen al cliente y
+                cómo conectarlas con sus necesidades.
+              </p>
+
+              <div class="summary-bottom">
+                <div class="summary-diagonal">
+                  <div class="summary-letter">2</div>
+                  <a href="resumen2.html"
+                     class="summary-link"
+                     title="Ver resumen 2"
+                     data-modal="modal-2">➜</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="flow-dot">
+            <div class="flow-dot-inner">➜</div>
+          </div>
+
+          <!-- RESUMEN 3 -->
+          <article class="summary-card summary-3">
+            <div class="summary-card-inner">
+              <div class="summary-tab">R3</div>
+
+              <div class="summary-step">RESUMEN</div>
+              <h3 class="summary-title">Proceso comercial</h3>
+              <p class="summary-text">
+                Puntos clave del flujo comercial: contacto, detección,
+                propuesta, manejo de objeciones y cierre.
+              </p>
+
+              <div class="summary-bottom">
+                <div class="summary-diagonal">
+                  <div class="summary-letter">3</div>
+                  <a href="resumen3.html"
+                     class="summary-link"
+                     title="Ver resumen 3"
+                     data-modal="modal-3">➜</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="flow-dot">
+            <div class="flow-dot-inner">➜</div>
+          </div>
+
+          <!-- RESUMEN 4 -->
+          <article class="summary-card summary-4">
+            <div class="summary-card-inner">
+              <div class="summary-tab">R4</div>
+
+              <div class="summary-step">RESUMEN</div>
+              <h3 class="summary-title">Buenas prácticas</h3>
+              <p class="summary-text">
+                Compendio de tips, frases modelo y comportamientos esperados
+                para asegurar una experiencia memorable al cliente.
+              </p>
+
+              <div class="summary-bottom">
+                <div class="summary-diagonal">
+                  <div class="summary-letter">4</div>
+                  <a href="resumen4.html"
+                     class="summary-link"
+                     title="Ver resumen 4"
+                     data-modal="modal-4">➜</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- BOTÓN GENERAL -->
+        <div class="cards-actions">
+          <a href="autoevaluacion.html" class="btn-next">Continuar</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ========= MODALES ========= -->
+
+<div class="modal-backdrop" id="modal-1">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-layout">
+      <div class="modal-image">
+        <img src="img/1.jpg" alt="Resumen 1">
+      </div>
+      <div class="modal-content">
+        <h3 class="modal-title">Introducción general</h3>
+        <h4 class="modal-subtitle">Panorama del módulo</h4>
+        <p class="modal-text">
+          Aquí podrás colocar el resumen ampliado de la introducción del módulo:
+          propósito de la inducción, objetivos generales y mensajes clave que
+          el colaborador debe tener claros antes de avanzar a los siguientes
+          temas y actividades.
+        </p>
+        <a class="modal-link-icon" href="resumen1.html" target="_blank" title="Abrir resumen completo">🔗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-2">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-layout">
+      <div class="modal-image">
+        <img src="img/1.jpg" alt="Resumen 2">
+      </div>
+      <div class="modal-content">
+        <h3 class="modal-title">Productos y servicios</h3>
+        <h4 class="modal-subtitle">Soluciones para el cliente</h4>
+        <p class="modal-text">
+          Resume aquí los productos, servicios y soluciones clave que se
+          trabajan en el módulo, destacando beneficios, diferenciales y
+          ejemplos de cómo conectarlos con las necesidades reales del cliente.
+        </p>
+        <a class="modal-link-icon" href="resumen2.html" target="_blank" title="Abrir resumen completo">🔗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-3">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-layout">
+      <div class="modal-image">
+        <img src="img/1.jpg" alt="Resumen 3">
+      </div>
+      <div class="modal-content">
+        <h3 class="modal-title">Proceso comercial</h3>
+        <h4 class="modal-subtitle">Etapas de la experiencia</h4>
+        <p class="modal-text">
+          Utiliza este espacio para detallar cada fase del proceso comercial:
+          preparación, contacto, detección de necesidades, propuesta de valor,
+          manejo de objeciones y cierre; resaltando los puntos que se deben
+          cuidar en cada etapa.
+        </p>
+        <a class="modal-link-icon" href="resumen3.html" target="_blank" title="Abrir resumen completo">🔗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-4">
+  <div class="modal-box">
+    <button class="modal-close" data-close>&times;</button>
+
+    <div class="modal-layout">
+      <div class="modal-image">
+        <img src="img/1.jpg" alt="Resumen 4">
+      </div>
+      <div class="modal-content">
+        <h3 class="modal-title">Buenas prácticas</h3>
+        <h4 class="modal-subtitle">Tips y recomendaciones</h4>
+        <p class="modal-text">
+          Aquí puedes incluir un compendio de buenas prácticas, frases modelo,
+          checklist de comportamientos y recordatorios finales que quieres
+          reforzar antes de que el colaborador cierre el módulo.
+        </p>
+        <a class="modal-link-icon" href="resumen4.html" target="_blank" title="Abrir resumen completo">🔗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VISOR DE ZOOM PARA LAS IMÁGENES -->
+<div class="zoom-viewer" id="zoom-viewer">
+  <div class="zoom-image-box">
+    <img src="" alt="Vista ampliada">
+  </div>
+  <button class="zoom-close" id="zoom-close">&times;</button>
+</div>
+
+<script>
+  // Abrir modal desde cada flechita
+  document.querySelectorAll('.summary-link').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = this.getAttribute('data-modal');
+      var modal = document.getElementById(id);
+      if(modal){
+        modal.classList.add('active');
+      }
+    });
+  });
+
+  // Cerrar modal con la X
+  document.querySelectorAll('.modal-close').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      this.closest('.modal-backdrop').classList.remove('active');
+    });
+  });
+
+  // Cerrar modal haciendo clic fuera de la caja
+  document.querySelectorAll('.modal-backdrop').forEach(function(backdrop){
+    backdrop.addEventListener('click', function(e){
+      if(e.target === backdrop){
+        backdrop.classList.remove('active');
+      }
+    });
+  });
+
+  // ====== ZOOM DE LA IMAGEN DEL MODAL ======
+  const zoomViewer = document.getElementById('zoom-viewer');
+  const zoomImg    = zoomViewer.querySelector('img');
+  const zoomClose  = document.getElementById('zoom-close');
+
+  document.querySelectorAll('.modal-image img').forEach(function(img){
+    img.addEventListener('click', function(){
+      zoomImg.src = this.src;
+      zoomViewer.classList.add('active');
+    });
+  });
+
+  zoomClose.addEventListener('click', function(){
+    zoomViewer.classList.remove('active');
+  });
+
+  zoomViewer.addEventListener('click', function(e){
+    if(e.target === zoomViewer){
+      zoomViewer.classList.remove('active');
+    }
+  });
+</script>
+
+</body>
+</html>

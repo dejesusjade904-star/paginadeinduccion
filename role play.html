@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Role Play</title>
+
+  <!-- Tipografía Altice -->
+  <style>
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Regular.woff2") format("woff2"),
+           url("fonts/Altice-Regular.woff")  format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Altice";
+      src: url("fonts/Altice-Bold.woff2") format("woff2"),
+           url("fonts/Altice-Bold.woff")  format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root{
+      --bg-page:#ffffff;
+      --panel-soft:#ffffff;
+      --blue:#1664fa;
+      --cyan:#00dadc;
+      --dark-blue:#041875;
+
+      --sim1:#ec6734;
+      --sim2:#1664fa;
+      --sim3:#ffd000;
+      --sim4:#00dadc;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Altice", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:var(--bg-page);
+      display:flex;            /* ocupa la pantalla completa */
+    }
+
+    .page{
+      width:100%;
+      min-height:100vh;        /* la página completa */
+      background:#ffffff;
+      border-radius:0;
+      overflow:hidden;
+      box-shadow:none;         /* sin sombra general */
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-strip{
+      height:6px;
+      background:#111827;
+    }
+
+    .top-nav{
+      height:58px;
+      border-bottom:1px solid #e5e7eb;
+      position:relative;       /* para posicionar los botones */
+    }
+
+    /* BOTÓN MENÚ (CASITA) */
+    .corner-menu-btn{
+      position:absolute;
+      left:32px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.45);
+      z-index:10;
+    }
+
+    .corner-menu-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-menu-btn:hover{
+      background:#1664fa;
+    }
+
+    /* BOTÓN IR HACIA ATRÁS */
+    .corner-back-btn{
+      position:absolute;
+      left:80px; /* al lado de la casita */
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(4,24,117,0.90);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(0,0,0,.38);
+      z-index:10;
+    }
+
+    .corner-back-btn svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+
+    .corner-back-btn:hover{
+      background:#1664fa;
+    }
+
+    .content{
+      padding:32px 40px 36px;
+      flex:1;
+      display:flex;
+    }
+
+    .left-panel{
+      position:relative;
+      width:100%;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .cards-wrapper{
+      width:100%;
+      background:var(--panel-soft);
+      border-radius:22px;
+      padding:22px 30px 26px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.12);
+    }
+
+    .section-label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:4px 18px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.72rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      box-shadow:0 8px 20px rgba(22,100,250,0.4);
+      margin-bottom:10px;
+    }
+
+    .section-label::before,
+    .section-label::after{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,0.8);
+    }
+
+    .cards-title{
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--dark-blue);
+      margin-bottom:10px;
+      text-align:center;
+    }
+
+    .cards-subtitle{
+      font-size:.8rem;
+      color:#4b5563;
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    /* === TARJETAS ESTILO INFOGRAFÍA === */
+    .sim-grid{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:nowrap;
+    }
+
+    .sim-card{
+      position:relative;
+      flex:1;
+      max-width:260px;
+      min-width:0;
+      border-radius:26px;
+      padding:22px 20px 20px;
+      color:#ffffff;
+      overflow:hidden;
+      box-shadow:0 18px 36px rgba(15,23,42,0.32);
+      display:flex;
+      flex-direction:column;
+    }
+
+    .sim-1{
+      background:linear-gradient(135deg, var(--sim1), #ec6734);
+    }
+    .sim-2{
+      background:linear-gradient(135deg, var(--sim2), #1664fa);
+    }
+    .sim-3{
+      background:linear-gradient(135deg, var(--sim3), #ffd000);
+    }
+    .sim-4{
+      background:linear-gradient(135deg, var(--sim4), #00dadc);
+    }
+
+    /* CÍRCULO BLANCO CON ICONO */
+    .sim-icon-circle{
+      width:66px;
+      height:66px;
+      border-radius:50%;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2rem;
+      color:#111827;
+      box-shadow:0 10px 20px rgba(15,23,42,0.4);
+      margin-bottom:12px;
+    }
+
+    .sim-text{
+      font-size:.78rem;
+      line-height:1.6;
+      opacity:.95;
+      max-width:210px;
+    }
+
+    /* NÚMERO GRANDE */
+    .sim-number{
+      position:absolute;
+      right:10px;
+      bottom:-14px;
+      font-size:4.6rem;
+      font-weight:800;
+      line-height:1;
+      color:rgba(255,255,255,0.25);
+    }
+
+    /* BOTÓN DENTRO DE LA TARJETA */
+    .sim-link{
+      margin-top:auto;
+      text-decoration:none;
+      align-self:flex-start;
+    }
+
+    .sim-btn{
+      margin-top:14px;
+      padding:6px 16px;
+      border-radius:999px;
+      border:none;
+      background:#ffffff;
+      font-size:.72rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:#111827;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      box-shadow:0 6px 14px rgba(15,23,42,0.35);
+    }
+
+    .sim-btn span.icon-arrow{
+      font-size:.9rem;
+    }
+
+    /* BOTÓN GENERAL ABAJO */
+    .cards-actions{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn-next{
+      min-width:150px;
+      padding:8px 24px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(22,100,250,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn-next:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(15,23,42,0.55);
+      filter:brightness(1.05);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:960px){
+      .content{
+        padding:24px 18px 30px;
+      }
+      .cards-wrapper{
+        padding:20px 18px 22px;
+      }
+      .sim-grid{
+        flex-wrap:wrap;
+      }
+      .sim-card{
+        max-width:none;
+        flex:1 1 calc(50% - 12px);
+        margin-bottom:16px;
+      }
+    }
+
+    @media (max-width:640px){
+      .sim-grid{
+        flex-direction:column;
+      }
+      .sim-card{
+        flex:1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-strip"></div>
+
+  <header class="top-nav">
+    <!-- BOTÓN MENÚ (CASITA) -->
+    <a href="menu guia.html" class="corner-menu-btn" title="Volver al menú">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3z"/>
+      </svg>
+    </a>
+
+    <!-- BOTÓN IR HACIA ATRÁS -->
+    <a href="javascript:history.back()" class="corner-back-btn" title="Volver atrás">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M15.5 5l-7 7 7 7 1.5-1.5L11.5 12l5.5-5.5L15.5 5z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="left-panel">
+      <div class="cards-wrapper">
+
+        <div class="section-label"><span>ACTIVIDADES</span></div>
+        <h2 class="cards-title">ROLE PLAY DEL MÓDULO 1</h2>
+
+        <div class="sim-grid">
+
+          <!-- TARJETA 1 -->
+          <article class="sim-card sim-1">
+            <div class="sim-icon-circle">🗣️</div>
+            <p class="sim-text">
+              Practica cómo saludar, presentarte y abrir la conversación de manera
+              profesional en una visita door to door.
+            </p>
+            <div class="sim-number">1</div>
+
+            <a href="simulador1.html" class="sim-link">
+              <button class="sim-btn" type="button">
+                Abrir Role Play <span class="icon-arrow">➜</span>
+              </button>
+            </a>
+          </article>
+
+          <!-- TARJETA 2 -->
+          <article class="sim-card sim-2">
+            <div class="sim-icon-circle">💬</div>
+            <p class="sim-text">
+              Ensaya preguntas clave para identificar la necesidad real del cliente,
+              escuchando activamente y validando la información.
+            </p>
+            <div class="sim-number">2</div>
+
+            <a href="simulador2.html" class="sim-link">
+              <button class="sim-btn" type="button">
+                Abrir Role Play <span class="icon-arrow">➜</span>
+              </button>
+            </a>
+          </article>
+
+          <!-- TARJETA 3 -->
+          <article class="sim-card sim-3">
+            <div class="sim-icon-circle">🎧</div>
+            <p class="sim-text">
+              Practica cómo responder dudas y objeciones frecuentes manteniendo
+              una actitud empática y enfocada en la solución.
+            </p>
+            <div class="sim-number">3</div>
+
+            <a href="simulador3.html" class="sim-link">
+              <button class="sim-btn" type="button">
+                Abrir Role Play <span class="icon-arrow">➜</span>
+              </button>
+            </a>
+          </article>
+
+          <!-- TARJETA 4 -->
+          <article class="sim-card sim-4">
+            <div class="sim-icon-circle">🤝</div>
+            <p class="sim-text">
+              Simula la etapa de cierre, validando compromisos, próximos pasos y
+              despedida profesional con el cliente.
+            </p>
+            <div class="sim-number">4</div>
+
+            <a href="simulador4.html" class="sim-link">
+              <button class="sim-btn" type="button">
+                Abrir Role Play <span class="icon-arrow">➜</span>
+              </button>
+            </a>
+          </article>
+
+        </div>
+
+        <!-- BOTÓN GENERAL -->
+        <div class="cards-actions">
+          <a href="simuladores.html" class="btn-next">Continuar</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+</body>
+</html>
